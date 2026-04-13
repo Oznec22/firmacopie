@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Autore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #fefce8;
+            color: #1f2937;
+            padding: 80px 20px 40px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            background: #facc15;
+            color: #1f2937;
+            padding: 10px 18px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+            transition: background 0.2s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background: #fde047;
+        }
+
+        h1 {
+            font-size: 2.4em;
+            color: #ef4444;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.6em;
+            color: #1e40af;
+            margin: 40px 0 20px;
+            border-left: 6px solid #facc15;
+            padding-left: 12px;
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        form button {
+            background: #1e40af;
+            color: #fff;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        form button:hover {
+            background: #2563eb;
+        }
+
+        .btn-danger {
+            background: #dc2626 !important;
+        }
+
+        .btn-danger:hover {
+            background: #ef4444 !important;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+        .card strong {
+            color: #1e3a8a;
+        }
+
+        .empty {
+            text-align: center;
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        .messages {
+            list-style: none;
+            margin: 0 0 30px 0;
+            padding: 0;
+        }
+
+        .messages li {
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+
+        .messages .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .messages .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .messages .info, .messages .warning {
+            background: #fef9c3;
+            color: #92400e;
+            border: 1px solid #facc15;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="{% url 'landing_page' %}">🏠 Home</a>
+        <a href="#" onclick="location.reload();" style="margin-left:10px;">🔄 Aggiorna</a>
+    </div>
+
+    <!-- Titolo -->
+    <h1>Ciao {{ request.user.nome }}!</h1>
+
+    <!-- Messaggi Django -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Fumetto di punta -->
+    <h2>📘 Il tuo fumetto di punta</h2>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                {% if message.tags == 'success' or message.tags == 'error' %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="card">
+        {% if fumetto %}
+            <p><strong>Titolo:</strong> {{ fumetto.titolo }}</p>
+            <p><strong>Genere:</strong> {{ fumetto.genere }}</p>
+            <p><strong>Prezzo:</strong> {{ fumetto.prezzo }}€</p>
+            <p><strong>Casa editrice:</strong> 
+                {% if fumetto.casa_editrice %}
+                    {{ fumetto.casa_editrice.nome }}
+                {% else %}
+                    Nessuna
+                {% endif %}
+            </p>
+            <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" name="modifica_fumetto">Modifica</button>
+            </form>
+            <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <button class="btn-danger" type="submit" name="elimina_fumetto" onclick="return confirm('Vuoi davvero eliminare il fumetto di punta?');">Elimina</button>
+            </form>
+        {% else %}
+            <p style="color: red;"><em>Nessun fumetto di punta inserito. Usa il form qui sotto per aggiungerlo!</em></p>
+        {% endif %}
+    </div>
+
+    {% if show_fumetto_form %}
+        <form method="post">
+            {% csrf_token %}
+            {{ fumetto_form.as_p }}
+            <button type="submit" name="salva_fumetto">Salva</button>
+        </form>
+    {% elif not fumetto %}
+        <form method="post">
+            {% csrf_token %}
+            {{ fumetto_form.as_p }}
+            <button type="submit" name="add_fumetto">Aggiungi fumetto</button>
+        </form>
+    {% endif %}
+
+    <!-- Aggiungi disponibilità -->
+    <h2>📅 Aggiungi disponibilità</h2>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                {% if message.tags == 'success' or message.tags == 'error' %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ disponibilita_formset.management_form }}
+        {% for form in disponibilita_formset %}
+            <div class="card">
+                {{ form.as_p }}
+                {% if form.errors %}
+                    <div style="color: red;">{{ form.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% if disponibilita_formset.non_form_errors %}
+            <div style="color: red;">{{ disponibilita_formset.non_form_errors }}</div>
+        {% endif %}
+        {% if disponibilita_formset.management_form.errors %}
+            <div style="color: red;">{{ disponibilita_formset.management_form.errors }}</div>
+        {% endif %}
+        <button type="submit" name="aggiungi_disponibilita">Salva disponibilità</button>
+    </form>
+
+    <!-- Disponibilità inserite -->
+    <h2>📆 Le tue disponibilità</h2>
+    <div class="card">
+        <ul>
+            {% for disp in disponibilita %}
+                <li>{{ disp.data }} – {{ disp.orario }}</li>
+            {% empty %}
+                <li class="empty">Nessuna disponibilità inserita.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Firmacopie -->
+    <h2>🖊️ FirmaCopie assegnati</h2>
+    {% if firmacopie_info and firmacopie_info|length > 0 %}
+        {% for fc in firmacopie_info %}
+            <div class="card">
+                <p><strong>Data:</strong> {{ fc.data }}</p>
+                <p><strong>Orario:</strong> {{ fc.orario }}</p>
+                <p><strong>Stand:</strong> {{ fc.stand }}</p>
+                <p><strong>Posti disponibili:</strong> {{ fc.posti_disponibili }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty">Nessun firmacopie assegnato.</p>
+    {% endif %}
+
+    <form method="get" style="margin-top: 20px;">
+        <button type="submit">🔄 Aggiorna lista firmacopie</button>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Conferma eliminazione prodotto</title>
+</head>
+<body>
+    <h2>Conferma eliminazione prodotto</h2>
+    <p>Sei sicuro di voler eliminare il prodotto <strong>{{ prodotto.nome }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Conferma eliminazione</button>
+        <a href="{% url 'home_editore' %}">Annulla</a>
+    </form>
+</body>
+</html>
+

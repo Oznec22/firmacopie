@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>COMICON 2026 – Napoli</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #fdf6e3;
+      color: #1f2937;
+      line-height: 1.6;
+      padding-top: 80px; /* spazio per la navbar fissa */
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      background: linear-gradient(135deg, #ff6b6b, #ffb400);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .logo {
+      font-family: 'Bangers', cursive;
+      font-size: 2em;
+      color: white;
+      text-shadow: 1px 1px 2px #00000044;
+    }
+
+    .navbar .nav-links a {
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      margin-left: 20px;
+      background: #1e40af;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: background 0.3s ease-in-out;
+    }
+
+    .navbar .nav-links a:hover {
+      background: #2563eb;
+    }
+
+    header {
+      background: linear-gradient(135deg, #ff6b6b, #ffb400);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 4em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px #00000030;
+    }
+
+    header p {
+      font-size: 1.2em;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.8em;
+      color: #ef4444;
+      margin-bottom: 20px;
+    }
+
+    .section p {
+      font-size: 1.1em;
+      color: #374151;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .feature-card:hover {
+      transform: scale(1.03);
+    }
+
+    .feature-card h3 {
+      color: #2563eb;
+      margin-bottom: 12px;
+      font-size: 1.5em;
+    }
+
+    .cta {
+      background: #1e40af;
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .cta h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .cta a {
+      display: inline-block;
+      background: #facc15;
+      color: #1f2937;
+      padding: 14px 28px;
+      margin: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .cta a:hover {
+      background: #fde047;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #6b7280;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2.6em;
+      }
+
+      .section h2 {
+        font-size: 2em;
+      }
+
+      .cta h2 {
+        font-size: 2em;
+      }
+
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar .nav-links {
+        margin-top: 10px;
+      }
+
+      .navbar .nav-links a {
+        margin-left: 0;
+        margin-right: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="logo">COMICON 2026</div>
+    <div class="nav-links">
+      <a href="{% url 'login' %}">Accedi</a>
+      <a href="{% url 'registrazione' %}">Registrati</a>
+    </div>
+  </div>
+
+  <header>
+    <h1>COMICON 2026 – NAPOLI</h1>
+    <p>Il più grande evento dedicato al fumetto, all'animazione, al cosplay e alla cultura pop torna alla Mostra d'Oltremare!</p>
+  </header>
+
+  <section class="section">
+    <h2>Cos'è il COMICON?</h2>
+    <p>
+      Il COMICON di Napoli è molto più di una semplice fiera del fumetto. È un festival dell'immaginario dove ogni anno migliaia di appassionati si incontrano per celebrare l’arte, la creatività e le storie che ci fanno sognare. Con mostre, incontri con gli autori, firmacopie, eventi cosplay e tanto altro, il Comicon è il cuore pulsante della cultura geek italiana.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Cosa puoi fare sul portale?</h2>
+    <div class="features">
+      <div class="feature-card">
+        <h3>Registrati</h3>
+        <p>Crea il tuo profilo come lettore, autore o casa editrice per accedere alle funzionalità del portale.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Prenota Firmacopie</h3>
+        <p>Se sei un utente, scegli l’autore che vuoi incontrare e prenota la tua sessione in pochi clic.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Gestisci le Disponibilità</h3>
+        <p>Se sei un autore o una casa editrice, organizza gli orari delle tue sessioni firma e visualizza le prenotazioni.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Sei pronto per l'avventura?</h2>
+    <a href="{% url 'login' %}">Accedi</a>
+    <a href="{% url 'registrazione' %}">Registrati Ora</a>
+  </section>
+
+  <footer>
+    © 2026 Comicon Napoli · Portale Firmacopie
+  </footer>
+
+</body>
+</html>

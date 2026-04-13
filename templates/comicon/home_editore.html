@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Casa Editrice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #fefce8;
+      color: #1f2937;
+      padding: 80px 20px 40px;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .navbar a {
+      background: #facc15;
+      color: #1f2937;
+      padding: 10px 18px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+      transition: background 0.2s ease-in-out;
+    }
+
+    .navbar a:hover {
+      background: #fde047;
+    }
+
+    h1 {
+      font-size: 2.4em;
+      color: #ef4444;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.6em;
+      color: #1e40af;
+      margin: 40px 0 20px;
+      border-left: 6px solid #facc15;
+      padding-left: 12px;
+    }
+
+    form {
+      margin-bottom: 30px;
+    }
+
+    form button {
+      background: #1e40af;
+      color: #fff;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    form button:hover {
+      background: #2563eb;
+    }
+
+    .btn-danger {
+      background: #dc2626 !important;
+    }
+
+    .btn-danger:hover {
+      background: #ef4444 !important;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.01);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      color: #1e3a8a;
+    }
+
+    .card strong {
+      color: #1e3a8a;
+    }
+
+    .empty {
+      text-align: center;
+      font-style: italic;
+      color: #6b7280;
+    }
+
+    .messages {
+      list-style: none;
+      margin: 0 0 30px 0;
+      padding: 0;
+    }
+    .messages li {
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .messages .success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #10b981;
+    }
+    .messages .error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #ef4444;
+    }
+    .messages .info, .messages .warning {
+      background: #fef9c3;
+      color: #92400e;
+      border: 1px solid #facc15;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="{% url 'landing_page' %}">🏠 Home</a>
+    <a href="#" onclick="location.reload();" style="margin-left:10px;">🔄 Aggiorna</a>
+  </div>
+
+  <!-- Titolo -->
+  <h1>Ciao {{ request.user.nome }}!</h1>
+
+  <!-- Autori e fumetti associati -->
+  <h2>👩‍🎨 Autori e fumetti della tua casa editrice</h2>
+  {% if autori %}
+    {% for autore in autori %}
+      <div class="card">
+        <strong>{{ autore.utente.nome }} {{ autore.utente.cognome }}</strong><br>
+        {% if autore.opera_principale %}
+          <em>Fumetto di punta:</em> <strong>{{ autore.opera_principale.titolo }}</strong><br>
+          <span>Genere: {{ autore.opera_principale.genere }}</span><br>
+          <span>Prezzo: {{ autore.opera_principale.prezzo }}€</span><br>
+        {% else %}
+          <em>Nessun fumetto di punta associato.</em>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty">Nessun autore o fumetto associato a questa casa editrice.</p>
+  {% endif %}
+
+  <!-- Aggiungi prodotto -->
+  <h2>🛍️ Aggiungi nuovo prodotto</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ prodotto_form.as_p }}
+    <button type="submit" name="aggiungi_prodotto">Aggiungi Prodotto</button>
+  </form>
+
+  <!-- Prodotti -->
+  <h2>📦 I tuoi prodotti</h2>
+  {% if prodotti %}
+    {% for prodotto in prodotti %}
+      <div class="card">
+        <strong>{{ prodotto.nome }}</strong> – {{ prodotto.prezzo }}€
+        <form method="post" action="{% url 'elimina_prodotto' prodotto.id %}" style="margin-top:10px;">
+          {% csrf_token %}
+          <button class="btn-danger" type="submit" onclick="return confirm('Vuoi davvero eliminare questo prodotto?');">Elimina</button>
+        </form>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty">Nessun prodotto registrato.</p>
+  {% endif %}
+
+  <!-- Eventi -->
+  <h2>🎤 I tuoi eventi</h2>
+  {% if eventi_dettaglio %}
+    {% for dettaglio in eventi_dettaglio %}
+      <div class="card">
+        <h3>
+          {% if dettaglio.evento.disponibilita %}
+            {{ dettaglio.evento.disponibilita.data }} {{ dettaglio.evento.disponibilita.orario }}
+          {% else %}
+            Data/ora non assegnata
+          {% endif %}
+        </h3>
+        <p><strong>Autore:</strong> {{ dettaglio.evento.autore.utente.nome }} {{ dettaglio.evento.autore.utente.cognome }}</p>
+        <p><strong>Stand:</strong> {% if dettaglio.stand %}{{ dettaglio.stand }}{% else %}N/A{% endif %}</p>
+        <p><strong>Posti occupati:</strong> {{ dettaglio.posti_occupati }} / {{ dettaglio.posti_totali }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty">Nessun evento registrato.</p>
+  {% endif %}
+
+  <!-- Messaggi Django -->
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+</body>
+</html>

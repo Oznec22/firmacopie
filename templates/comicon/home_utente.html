@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Utente – COMICON 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #fefce8;
+      color: #1f2937;
+      padding: 80px 20px 40px;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .navbar a {
+      background: #facc15;
+      color: #1f2937;
+      padding: 10px 18px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+      transition: background 0.2s ease-in-out;
+    }
+
+    .navbar a:hover {
+      background: #fde047;
+    }
+
+    h1 {
+      font-size: 2.8em;
+      color: #ef4444;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.6em;
+      color: #1e40af;
+      margin: 40px 0 20px;
+      border-left: 6px solid #facc15;
+      padding-left: 12px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.01);
+    }
+
+    .card strong {
+      font-size: 1.1em;
+      color: #1e3a8a;
+    }
+
+    .card small {
+      color: #6b7280;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .card ul {
+      margin-top: 10px;
+      padding-left: 18px;
+    }
+
+    .card li {
+      margin-bottom: 4px;
+    }
+
+    .btn {
+      background: #1e40af;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #2563eb;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+    }
+
+    .btn-danger:hover {
+      background: #ef4444;
+    }
+
+    .full {
+      color: red;
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    p.empty {
+      text-align: center;
+      font-style: italic;
+      color: #6b7280;
+    }
+
+    .messages {
+      list-style: none;
+      margin: 0 0 30px 0;
+      padding: 0;
+    }
+    .messages li {
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .messages .success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #10b981;
+    }
+    .messages .error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #ef4444;
+    }
+    .messages .info, .messages .warning {
+      background: #fef9c3;
+      color: #92400e;
+      border: 1px solid #facc15;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="/">🏠 Home</a>
+    <a href="#" onclick="location.reload();" style="margin-left:10px;">🔄 Aggiorna</a>
+  </div>
+
+  <!-- Titolo -->
+  <h1>Ciao {{ request.user.nome }}!</h1>
+
+  <!-- Messaggi Django -->
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- Eventi disponibili -->
+  <h2>🎟️ Eventi disponibili</h2>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        {% if message.tags == 'success' or message.tags == 'error' %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% for info in eventi_info %}
+    <div class="card">
+      <strong>
+        {% if info.evento.data %}{{ info.evento.data }}{% elif info.evento.disponibilita and info.evento.disponibilita.data %}{{ info.evento.disponibilita.data }}{% else %}N/A{% endif %}
+        –
+        {% if info.evento.ora %}{{ info.evento.ora }}{% elif info.evento.disponibilita and info.evento.disponibilita.orario %}{{ info.evento.disponibilita.orario }}{% else %}N/A{% endif %}
+      </strong><br>
+      Autore: {{ info.evento.autore.utente.nome }} {{ info.evento.autore.utente.cognome }}<br>
+      Opera: {% if info.evento.autore.opera_principale %}{{ info.evento.autore.opera_principale.titolo }}{% else %}N/A{% endif %}<br>
+      Casa editrice: {{ info.casa_editrice }}<br>
+      Stand: {% if info.evento.stand %}{{ info.evento.stand }}{% else %}N/A{% endif %}<br>
+      Posti: {{ info.posti_occupati }} / {{ info.posti_totali }}<br>
+
+      {% if info.prenotato %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="evento_id" value="{{ info.evento.id }}">
+          <button type="submit" name="annulla" class="btn btn-danger">Annulla prenotazione</button>
+        </form>
+      {% elif info.posti_occupati < info.posti_totali %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="evento_id" value="{{ info.evento.id }}">
+          <button type="submit" name="prenota" class="btn">Prenotati</button>
+        </form>
+      {% else %}
+        <span class="full">Posti esauriti</span>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  <!-- Case editrici -->
+  <h2>🏢 Case editrici & Prodotti</h2>
+  {% for item in case_prodotti %}
+    <div class="card">
+      <strong>{{ item.editore_username }}</strong><br>
+      {% if item.prodotti %}
+        <ul>
+          {% for prodotto in item.prodotti %}
+            <li>{{ prodotto.nome }} – {{ prodotto.prezzo }} €</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <em>Nessun prodotto disponibile</em>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  <!-- Recensioni degli eventi prenotati -->
+  <h2>📝 Le tue recensioni sugli eventi</h2>
+  {% if eventi_prenotati_info %}
+    {% for info in eventi_prenotati_info %}
+      <div class="card">
+        <strong>Evento:</strong>
+        {% if info.evento.disponibilita %}
+          {{ info.evento.disponibilita.data }} {{ info.evento.disponibilita.orario }}<br>
+        {% else %}
+          Data/ora non assegnata<br>
+        {% endif %}
+        <strong>Autore:</strong> {{ info.evento.autore.utente.nome }} {{ info.evento.autore.utente.cognome }}<br>
+        <strong>Fumetto:</strong> {% if info.evento.autore.opera_principale %}{{ info.evento.autore.opera_principale.titolo }}{% else %}N/A{% endif %}<br>
+        {% if info.recensione %}
+          <strong>Recensione:</strong> {{ info.recensione.testo }}<br>
+          <small>Voto: {{ info.recensione.voto }}</small>
+        {% else %}
+          <em>Nessuna recensione inserita per questo evento.</em>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty">Non hai ancora recensito nessun evento.</p>
+  {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+{% extends 'comicon/base.html' %}
+
+{% block content %}
+  <div class="alert alert-danger" style="margin: 2em;">
+    <h2>Errore di accesso</h2>
+    <p>{{ messaggio }}</p>
+    <a href="{% url 'landing_page' %}" class="btn btn-primary">Torna alla home</a>
+  </div>
+{% endblock %}

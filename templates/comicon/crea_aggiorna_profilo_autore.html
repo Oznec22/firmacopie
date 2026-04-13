@@ -1,0 +1,8 @@
+<h1>Completa il profilo Autore</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <!-- Il campo 'genere' è stato rimosso, non verrà più visualizzato né richiesto -->
+    <button type="submit">Salva</button>
+</form>
