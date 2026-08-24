@@ -1,70 +1,105 @@
-# Comicon 2026 - Autograph & Event Management Portal
+FIRMACOPIE - COMICON 2026 EVENT MANAGEMENT PORTAL
+Firmacopie is a web platform designed for the integrated management of autograph sessions and meet-and-greets during Comicon 2026. The system allows users to book tickets for signing sessions, authors to manage their availability, and publishing houses to coordinate their artists and products.
 
-**Firmacopie** is a web platform designed for the integrated management of autograph sessions and meet-and-greets during Comicon 2026. The system allows users to book tickets for signing sessions, authors to manage their availability, and publishers to coordinate their artists and products.
+HOW TO USE THE SITE
+1. HOME
+Main page that welcomes the user with an overview of the event. From here it is possible to access the login and registration sections. After logging in, the system redirects the user to the specific dashboard based on their role.
 
----
+2. REGISTRATION
+Enter username, email, and password. It is crucial to choose the correct role:
 
-## Features & User Guide
+User: For those who want to participate and receive autographs.
 
-### 1. Home & Authentication
-The landing page provides an overview of the event. Users can register and log in, choosing their specific **Role**:
-* **User (Fan):** Wants to attend events and receive autographs.
-* **Author:** Artists managing their schedule and signing sessions.
-* **Publisher (Editore):** Publishing houses coordinating booths and authors.
-Upon login, the system automatically redirects to a role-specific dashboard.
+Author: For artists who need to manage their schedules.
 
-### 2. User Dashboard (Fans)
-* Browse available signing sessions filtered by author or publisher.
-* Check remaining seats for each booth.
-* Click "Prenota" (Book) to generate and save a unique virtual ticket in the database.
-* Leave a 1-5 star rating and a text review after attending an event.
+Publisher: For publishing houses coordinating booths and products.
 
-### 3. Author Dashboard
-* Set a flagship comic/work.
-* Declare available days and time slots for booth presence.
+3. LOGIN
+Enter your credentials to access the reserved features. The system automatically recognizes whether you are a user, an author, or a publisher.
 
-### 4. Publisher Dashboard
-* View associated authors.
-* Add new products/comics to the catalog.
-* Monitor booking trends for their events.
+4. TICKET BOOKING (Users)
+View the list of available signing sessions filtered by author or publisher.
 
-### 5. Admin Panel
-Restricted access for administrators to manage pavilions, booths, and overall database maintenance.
+You can see the remaining seats for each booth.
 
----
+By clicking on "Book", you will receive a unique virtual ticket saved in the database.
 
-## Test Accounts
+5. AUTHOR MANAGEMENT (Authors)
+Authors can set their flagship comic and declare the days and time slots they will be present at the booths.
 
-You can test the platform's role-based access control using the following pre-configured accounts:
+6. CATALOG MANAGEMENT (Publishers)
+Publishers can view their associated authors, add new products to the catalog, and monitor the booking trends for their events.
 
-* **Private User (Fan)** | Username: `mario` | Password: `comicon!`
-* **Author** | Username: `Oda` | Password: `comicon!`
-* **Publisher** | Username: `mondadori` | Password: `comicon!`
+7. REVIEWS
+After attending an event, the user can leave a review with a text comment and a rating from 1 to 5 stars. It is possible to see the average reviews for each author.
 
----
+8. ADMIN
+Restricted access for administrators to manage pavilions, booths, and general database maintenance.
 
-## Project Structure
+TEST ACCOUNTS
+To test the different portal features based on access permissions, you can use the following pre-configured accounts:
 
-### Models (`models.py`)
-* **Utente**: `username`, `password`, `email`, `ruolo`, `casa_editrice`
-* **Autore**: `utente`, `opera_principale`, `giorni_disponibili`, `orari_disponibili`
-* **Fumetto**: `titolo`, `prezzo`, `genere`, `casa_editrice`
-* **Stand**: `padiglione`, `stallo`, `totale_persone`, `disponibilita`
-* **FirmaCopie**: `autore`, `disponibilita`, `stand`, `posti_disponibili`
-* **Prenotazione**: `utente`, `firmacopie`, `timestamp`
-* **Recensione**: `utente`, `firmacopie`, `testo`, `voto`, `data`
+PRIVATE USER (Fan)
+Username: mario
 
-### Core Views (`views.py`)
-* `login_view` / `registrazione_view`
-* `home_redirect_view` (Role-based routing)
-* `home_utente_view` / `home_autore_view` / `home_editore_view`
-* `prenota_annulla_evento`
-* `ajax_casa_editrice_autore`
+Password: comicon!
 
----
+AUTHOR
+Username: Oda
 
-## Local Setup & Installation
+Password: comicon!
 
-1. **Create a virtual environment:**
-   ```bash
-   python -m venv .venv
+PUBLISHER
+Username: mondadori
+
+Password: comicon!
+
+PROJECT STRUCTURE
+MODELS (models.py)
+User: username, password, email, ruolo, casa_editrice
+
+Author: utente, opera_principale, giorni_disponibili, orari_disponibili
+
+Comic: titolo, prezzo, genere, casa_editrice
+
+Booth: padiglione, stallo, totale_persone, disponibilita
+
+FirmaCopie: autore, disponibilita, stand, posti_disponibili
+
+Booking: utente, firmacopie, timestamp
+
+Review: utente, firmacopie, testo, voto, data
+
+VIEWS (views.py)
+login_view / registrazione_view
+
+home_redirect_view (role routing)
+
+home_utente_view / home_autore_view / home_editore_view
+
+prenota_annulla_evento
+
+ajax_casa_editrice_autore
+
+STARTUP INSTRUCTIONS
+Create the virtual environment:
+python -m venv .venv
+
+Activate it:
+.venv\Scripts\activate (Windows) or source .venv/bin/activate (Mac/Linux)
+
+Install the packages:
+pip install django django-extensions
+
+Run the migrations:
+python manage.py makemigrations
+python manage.py migrate
+
+Start the server:
+python manage.py runserver
+
+Author: Mataluna Vincenzo
+
+Course: Databases
+
+University: Università degli Studi di Napoli Parthenope
